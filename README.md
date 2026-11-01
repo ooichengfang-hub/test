@@ -1,48 +1,42 @@
 # Kraken Trading Desk
 
-Streamlit dashboard for crypto portfolio balances, market watch, candles, and recent fills — backed by Kraken.
+Crypto trading dashboard for portfolio equity, holdings, market watch, candles, and fills — backed by Kraken public market data.
 
-### How to run it
+## HTML mode (recommended)
 
-1. Install dependencies
+Single-page dashboard with a tiny local proxy (needed because Kraken’s public API does not allow browser CORS).
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+python3 serve_dashboard.py
+```
 
-2. Start the app
+Open [http://127.0.0.1:8080/](http://127.0.0.1:8080/).
 
-   ```bash
-   streamlit run streamlit_app.py
-   ```
+- Live tickers + OHLC from Kraken
+- Portfolio / fills from the `PORTFOLIO` object at the top of `dashboard.html` (seeded from the paper workspace)
+- Times shown in **Asia/Kuala_Lumpur**
 
-### Data modes
+Edit balances and trades in `dashboard.html` to match your book. For live account balances, keep API secrets off the client — use the Streamlit app with server-side secrets instead.
 
-| Mode | When it activates | What you see |
-|------|-------------------|--------------|
-| **Live** | `KRAKEN_API_KEY` + `KRAKEN_API_SECRET` in env or `.streamlit/secrets.toml` | Real balances, trade balance, trade history |
-| **Paper** | Local `kraken` CLI with `KRAKEN_WORKSPACE` (default `dashboard`) | Paper equity, balances, and fills |
-| **Demo** | Neither of the above | Bundled sample portfolio + live public market data |
+## Streamlit mode (optional)
 
-Market tickers and OHLC always come from Kraken’s public REST API.
+```bash
+pip install -r requirements.txt
+streamlit run streamlit_app.py
+```
 
-### Live credentials (optional)
+| Mode | When it activates |
+|------|-------------------|
+| **Live** | `KRAKEN_API_KEY` + `KRAKEN_API_SECRET` in env or `.streamlit/secrets.toml` |
+| **Paper** | Local `kraken` CLI with `KRAKEN_WORKSPACE` |
+| **Demo** | Neither of the above |
 
-Create `.streamlit/secrets.toml` (gitignored):
+### Live credentials (Streamlit only)
 
 ```toml
+# .streamlit/secrets.toml
 KRAKEN_API_KEY = "your-key"
 KRAKEN_API_SECRET = "your-secret"
 ```
 
-Use a **read-only** Kraken key (`Query Funds`, `Query Open/Closed Orders & Trades`). Do not enable withdraw.
-
-### Paper workspace (optional)
-
-```bash
-# install kraken-cli, then:
-kraken workspace create dashboard --capital 10000 --mode paper -o json
-export KRAKEN_WORKSPACE=dashboard
-kraken paper buy BTCUSD 0.05 -o json
-streamlit run streamlit_app.py
-```
+Use a **read-only** key. Do not enable withdraw.
