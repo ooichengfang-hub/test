@@ -3,23 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Kraken Trading Desk</title>
+  <title>Binance Trading Desk</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --ink: #132019;
-      --muted: #4d6358;
-      --line: rgba(19, 32, 25, 0.12);
-      --panel: rgba(255, 252, 247, 0.72);
+      --ink: #17140f;
+      --muted: #6a6256;
+      --line: rgba(23, 20, 15, 0.12);
+      --panel: rgba(255, 252, 246, 0.78);
       --panel-strong: #fffdf8;
-      --accent: #1f6a4a;
-      --accent-deep: #0f3b2a;
+      --accent: #c2a117;
+      --accent-deep: #1c1914;
       --rise: #1f6a4a;
       --fall: #9b3a32;
-      --glow: rgba(31, 106, 74, 0.14);
-      --shadow: 0 18px 50px rgba(19, 32, 25, 0.08);
+      --shadow: 0 18px 50px rgba(23, 20, 15, 0.08);
       --radius: 18px;
       --font-display: "Fraunces", Georgia, serif;
       --font-body: "Manrope", sans-serif;
@@ -27,15 +26,14 @@
     }
 
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
     body {
       margin: 0;
       color: var(--ink);
       font-family: var(--font-body);
       background:
-        radial-gradient(1200px 600px at 10% -10%, rgba(31, 106, 74, 0.18), transparent 60%),
-        radial-gradient(900px 500px at 90% 0%, rgba(180, 140, 70, 0.12), transparent 55%),
-        linear-gradient(180deg, #eef4ef 0%, #e6ebe4 45%, #f4efe6 100%);
+        radial-gradient(1100px 520px at 8% -8%, rgba(194, 161, 23, 0.18), transparent 60%),
+        radial-gradient(900px 480px at 92% 0%, rgba(31, 106, 74, 0.10), transparent 55%),
+        linear-gradient(180deg, #f3efe6 0%, #ebe7de 48%, #f7f4ee 100%);
       min-height: 100vh;
     }
 
@@ -44,10 +42,10 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      opacity: 0.35;
+      opacity: 0.28;
       background-image:
-        linear-gradient(rgba(19, 32, 25, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(19, 32, 25, 0.03) 1px, transparent 1px);
+        linear-gradient(rgba(23, 20, 15, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(23, 20, 15, 0.035) 1px, transparent 1px);
       background-size: 48px 48px;
       mask-image: linear-gradient(180deg, #000 0%, transparent 85%);
     }
@@ -65,29 +63,24 @@
       align-items: end;
       justify-content: space-between;
       gap: 1rem;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1rem;
       animation: rise 700ms ease both;
     }
 
-    .brand {
-      display: grid;
-      gap: 0.35rem;
-    }
-
+    .brand { display: grid; gap: 0.35rem; }
     .brand-mark {
       font-family: var(--font-display);
       font-size: clamp(2rem, 4vw, 3rem);
       line-height: 0.95;
       letter-spacing: -0.03em;
-      color: var(--accent-deep);
       margin: 0;
+      color: var(--accent-deep);
     }
-
     .brand-sub {
       margin: 0;
       color: var(--muted);
       font-size: 0.95rem;
-      max-width: 36rem;
+      max-width: 38rem;
     }
 
     .controls {
@@ -107,23 +100,35 @@
       padding: 0.55rem 0.9rem;
       outline: none;
     }
-
     select, button { cursor: pointer; }
     button {
       background: var(--accent-deep);
-      color: #f6fff9;
+      color: #fff8e8;
       border-color: transparent;
       transition: transform 160ms ease, background 160ms ease;
     }
-    button:hover { background: var(--accent); transform: translateY(-1px); }
-    button:active { transform: translateY(0); }
-
-    .chip {
-      font-size: 0.82rem;
-      color: var(--muted);
-      background: rgba(255, 253, 248, 0.85);
-    }
+    button:hover { background: #2c261e; transform: translateY(-1px); }
+    .chip { font-size: 0.82rem; color: var(--muted); }
     .chip strong { color: var(--ink); font-weight: 600; }
+
+    .banner {
+      display: none;
+      margin-bottom: 1rem;
+      padding: 0.95rem 1.1rem;
+      border-radius: var(--radius);
+      border: 1px solid rgba(194, 161, 23, 0.35);
+      background: rgba(255, 248, 220, 0.9);
+      color: #5a4a12;
+      animation: rise 750ms ease both;
+    }
+    .banner.show { display: block; }
+    .banner code {
+      font-family: var(--font-mono);
+      font-size: 0.86rem;
+      background: rgba(255,255,255,0.65);
+      padding: 0.1rem 0.35rem;
+      border-radius: 6px;
+    }
 
     .hero {
       display: grid;
@@ -131,7 +136,6 @@
       gap: 1rem;
       margin-bottom: 1rem;
       animation: rise 800ms ease both;
-      animation-delay: 60ms;
     }
 
     .equity-panel {
@@ -139,39 +143,34 @@
       overflow: hidden;
       border-radius: calc(var(--radius) + 4px);
       padding: 1.5rem 1.6rem;
-      color: #f4faf6;
-      background:
-        linear-gradient(135deg, #0f3b2a 0%, #1f6a4a 55%, #2f7d58 100%);
+      color: #fff8e8;
+      background: linear-gradient(135deg, #17140f 0%, #2a241b 55%, #3a3124 100%);
       box-shadow: var(--shadow);
       min-height: 220px;
     }
-
     .equity-panel::after {
       content: "";
       position: absolute;
-      right: -40px;
-      bottom: -60px;
-      width: 240px;
-      height: 240px;
+      right: -36px;
+      bottom: -70px;
+      width: 220px;
+      height: 220px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(194, 161, 23, 0.18);
     }
-
     .equity-label {
       font-size: 0.85rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      opacity: 0.78;
+      opacity: 0.75;
       margin: 0 0 0.5rem;
     }
-
     .equity-value {
       font-family: var(--font-mono);
       font-size: clamp(2.2rem, 5vw, 3.4rem);
       margin: 0;
       letter-spacing: -0.04em;
     }
-
     .equity-meta {
       margin-top: 1.1rem;
       display: flex;
@@ -180,12 +179,10 @@
       position: relative;
       z-index: 1;
     }
-
-    .equity-meta div { min-width: 7rem; }
     .equity-meta span {
       display: block;
       font-size: 0.78rem;
-      opacity: 0.75;
+      opacity: 0.72;
       margin-bottom: 0.2rem;
     }
     .equity-meta strong {
@@ -199,7 +196,6 @@
       grid-template-rows: repeat(3, 1fr);
       gap: 0.75rem;
     }
-
     .metric {
       background: var(--panel);
       backdrop-filter: blur(10px);
@@ -208,14 +204,12 @@
       padding: 1rem 1.1rem;
       box-shadow: var(--shadow);
     }
-
     .metric span {
       display: block;
       color: var(--muted);
       font-size: 0.8rem;
       margin-bottom: 0.25rem;
     }
-
     .metric strong {
       font-family: var(--font-mono);
       font-size: 1.25rem;
@@ -230,7 +224,6 @@
       grid-template-columns: 1.2fr 0.8fr;
       gap: 1rem;
       animation: rise 850ms ease both;
-      animation-delay: 120ms;
     }
 
     .panel {
@@ -241,15 +234,13 @@
       padding: 1.15rem 1.2rem 1.25rem;
       box-shadow: var(--shadow);
     }
-
     .panel h2 {
-      margin: 0 0 0.9rem;
+      margin: 0;
       font-family: var(--font-display);
       font-size: 1.35rem;
       font-weight: 500;
       letter-spacing: -0.02em;
     }
-
     .panel-head {
       display: flex;
       align-items: center;
@@ -257,20 +248,13 @@
       gap: 0.75rem;
       margin-bottom: 0.75rem;
     }
-    .panel-head h2 { margin: 0; }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.92rem;
-    }
-
+    table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
     th, td {
       padding: 0.65rem 0.35rem;
       border-bottom: 1px solid var(--line);
       text-align: left;
     }
-
     th {
       color: var(--muted);
       font-weight: 500;
@@ -278,44 +262,32 @@
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
-
     td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
     td.mono { font-family: var(--font-mono); font-size: 0.86rem; }
 
-    .alloc {
-      display: grid;
-      gap: 0.7rem;
-      margin-top: 1rem;
-    }
-
+    .alloc { display: grid; gap: 0.7rem; margin-top: 1rem; }
     .alloc-row {
       display: grid;
-      grid-template-columns: 3.5rem 1fr 3.5rem;
+      grid-template-columns: 3.8rem 1fr 3.5rem;
       gap: 0.6rem;
       align-items: center;
     }
-
     .bar {
       height: 10px;
       border-radius: 999px;
-      background: rgba(19, 32, 25, 0.08);
+      background: rgba(23, 20, 15, 0.08);
       overflow: hidden;
     }
-
     .bar > i {
       display: block;
       height: 100%;
       width: 0;
       border-radius: inherit;
-      background: linear-gradient(90deg, var(--accent-deep), var(--accent));
+      background: linear-gradient(90deg, #1c1914, #c2a117);
       transition: width 900ms cubic-bezier(.2,.8,.2,1);
     }
 
-    .watch {
-      display: grid;
-      gap: 0.65rem;
-    }
-
+    .watch { display: grid; gap: 0.65rem; }
     .watch-item {
       display: grid;
       grid-template-columns: 1fr auto;
@@ -326,23 +298,16 @@
       border: 1px solid var(--line);
       transition: transform 180ms ease, border-color 180ms ease;
     }
-
     .watch-item:hover {
       transform: translateY(-2px);
-      border-color: rgba(31, 106, 74, 0.35);
+      border-color: rgba(194, 161, 23, 0.45);
     }
-
-    .watch-item .pair {
-      font-weight: 600;
-      letter-spacing: -0.01em;
-    }
-
+    .watch-item .pair { font-weight: 600; }
     .watch-item .last {
       font-family: var(--font-mono);
       font-size: 1.05rem;
       justify-self: end;
     }
-
     .watch-item .meta {
       grid-column: 1 / -1;
       display: flex;
@@ -351,33 +316,16 @@
       font-size: 0.8rem;
     }
 
-    .chart-wrap {
-      margin-top: 1rem;
-      animation: rise 900ms ease both;
-      animation-delay: 180ms;
-    }
-
+    .chart-wrap, .fills { margin-top: 1rem; animation: rise 900ms ease both; }
     .chart-frame {
       position: relative;
       height: 320px;
       border-radius: 14px;
-      background:
-        linear-gradient(180deg, rgba(255,253,248,0.9), rgba(238,244,239,0.65));
+      background: linear-gradient(180deg, rgba(255,253,248,0.9), rgba(243,239,230,0.65));
       border: 1px solid var(--line);
       overflow: hidden;
     }
-
-    canvas#priceChart {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    .fills {
-      margin-top: 1rem;
-      animation: rise 950ms ease both;
-      animation-delay: 220ms;
-    }
+    canvas#priceChart { width: 100%; height: 100%; display: block; }
 
     .side-buy { color: var(--rise); font-weight: 600; }
     .side-sell { color: var(--fall); font-weight: 600; }
@@ -398,11 +346,10 @@
       border-radius: 50%;
       display: inline-block;
       margin-right: 0.4rem;
-      background: var(--accent);
+      background: var(--rise);
       box-shadow: 0 0 0 0 rgba(31, 106, 74, 0.45);
       animation: pulse 2.2s infinite;
     }
-
     .status-dot.warn { background: #b07a18; animation: none; }
     .status-dot.err { background: var(--fall); animation: none; }
 
@@ -410,7 +357,6 @@
       from { opacity: 0; transform: translateY(14px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
     @keyframes pulse {
       0% { box-shadow: 0 0 0 0 rgba(31, 106, 74, 0.45); }
       70% { box-shadow: 0 0 0 10px rgba(31, 106, 74, 0); }
@@ -423,7 +369,6 @@
       .controls { justify-content: start; }
       .metric-grid { grid-template-columns: repeat(3, 1fr); grid-template-rows: none; }
     }
-
     @media (max-width: 640px) {
       .shell { width: min(100% - 1.2rem, 1180px); }
       .metric-grid { grid-template-columns: 1fr; }
@@ -436,25 +381,32 @@
   <div class="shell">
     <header class="topbar">
       <div class="brand">
-        <h1 class="brand-mark">Kraken Trading Desk</h1>
-        <p class="brand-sub">Portfolio, market tape, and fills — live public prices with your paper book marked to market.</p>
+        <h1 class="brand-mark">Binance Trading Desk</h1>
+        <p class="brand-sub">Your spot balances and fills, marked with live Binance USDT prices.</p>
       </div>
       <div class="controls">
-        <span class="chip" id="modeChip"><strong>Paper</strong> workspace</span>
+        <span class="chip" id="modeChip"><strong>Binance</strong></span>
         <span class="chip" id="clockChip">Asia/Kuala_Lumpur</span>
         <select id="pairSelect" aria-label="Chart pair">
-          <option value="XXBTZUSD">BTC/USD</option>
-          <option value="XETHZUSD">ETH/USD</option>
-          <option value="SOLUSD">SOL/USD</option>
+          <option value="BTCUSDT">BTC/USDT</option>
+          <option value="ETHUSDT">ETH/USDT</option>
+          <option value="SOLUSDT">SOL/USDT</option>
         </select>
         <select id="intervalSelect" aria-label="Candle interval">
-          <option value="60">1h</option>
-          <option value="240" selected>4h</option>
-          <option value="1440">1d</option>
+          <option value="1h">1h</option>
+          <option value="4h" selected>4h</option>
+          <option value="1d">1d</option>
         </select>
         <button id="refreshBtn" type="button">Refresh</button>
       </div>
     </header>
+
+    <div class="banner" id="credBanner">
+      Add a <strong>read-only</strong> Binance API key to pull your account.
+      Copy <code>.env.example</code> → <code>.env</code>, set
+      <code>BINANCE_API_KEY</code> and <code>BINANCE_API_SECRET</code>, then restart
+      <code>python3 serve_dashboard.py</code>. Enable only “Enable Reading”. Never enable withdrawals.
+    </div>
 
     <section class="hero">
       <div class="equity-panel">
@@ -462,27 +414,27 @@
         <p class="equity-value" id="equityValue">—</p>
         <div class="equity-meta">
           <div>
-            <span>Unrealized P&amp;L</span>
-            <strong id="pnlValue">—</strong>
+            <span>Cash (stables)</span>
+            <strong id="cashValue">—</strong>
           </div>
           <div>
-            <span>Starting capital</span>
-            <strong id="startValue">—</strong>
+            <span>Crypto book</span>
+            <strong id="cryptoValue">—</strong>
           </div>
           <div>
-            <span>Fills</span>
+            <span>Fills loaded</span>
             <strong id="fillCount">—</strong>
           </div>
         </div>
       </div>
       <div class="metric-grid">
         <div class="metric">
-          <span>Cash</span>
-          <strong id="cashValue">—</strong>
+          <span>Holdings</span>
+          <strong id="holdingCount">—</strong>
         </div>
         <div class="metric">
-          <span>Crypto book</span>
-          <strong id="cryptoValue">—</strong>
+          <span>Account</span>
+          <strong id="accountType">—</strong>
         </div>
         <div class="metric">
           <span>Data status</span>
@@ -495,7 +447,7 @@
       <div class="panel">
         <div class="panel-head">
           <h2>Holdings</h2>
-          <span class="chip">marked USD</span>
+          <span class="chip">USDT marked</span>
         </div>
         <table>
           <thead>
@@ -515,7 +467,7 @@
       <div class="panel">
         <div class="panel-head">
           <h2>Market watch</h2>
-          <span class="chip">Kraken public</span>
+          <span class="chip">Binance public</span>
         </div>
         <div class="watch" id="watchList"></div>
       </div>
@@ -523,8 +475,8 @@
 
     <section class="panel chart-wrap">
       <div class="panel-head">
-        <h2 id="chartTitle">BTC/USD</h2>
-        <span class="chip" id="chartMeta">OHLC</span>
+        <h2 id="chartTitle">BTC/USDT</h2>
+        <span class="chip" id="chartMeta">klines</span>
       </div>
       <div class="chart-frame">
         <canvas id="priceChart" width="1100" height="320"></canvas>
@@ -534,7 +486,7 @@
     <section class="panel fills">
       <div class="panel-head">
         <h2>Recent fills</h2>
-        <span class="chip">paper history</span>
+        <span class="chip">myTrades</span>
       </div>
       <table>
         <thead>
@@ -553,181 +505,148 @@
     </section>
 
     <footer class="footer">
-      <div>Source: Kraken public REST via local proxy · portfolio from paper workspace snapshot</div>
+      <div id="sourceLine">Source: Binance</div>
       <div id="updatedAt">Updated —</div>
     </footer>
   </div>
 
   <script>
     const TZ = "Asia/Kuala_Lumpur";
-    const PAIR_LABEL = {
-      XXBTZUSD: "BTC/USD",
-      XETHZUSD: "ETH/USD",
-      SOLUSD: "SOL/USD",
-    };
-    const ASSET_PAIR = { BTC: "XXBTZUSD", ETH: "XETHZUSD", SOL: "SOLUSD" };
-    const STABLES = new Set(["USD", "ZUSD", "USDT", "USDC"]);
-
-    // Edit this block to point at your own book, or keep the paper snapshot.
-    const PORTFOLIO = {
-      mode: "paper",
-      starting_balance: 10000,
-      starting_currency: "USD",
-      balances: {
-        BTC: 0.05,
-        ETH: 0.5,
-        SOL: 7,
-        USD: 4310.515231,
-      },
-      trades: [
-        { id: "PAPER-00002", pair: "BTCUSD", side: "buy", volume: 0.05, price: 77523.5, fee: 10.078055, cost: 3876.175, time: "2026-11-01T00:50:14.409Z" },
-        { id: "PAPER-00004", pair: "ETHUSD", side: "buy", volume: 0.5, price: 2257.36, fee: 2.934568, cost: 1128.68, time: "2026-11-01T00:50:14.476Z" },
-        { id: "PAPER-00006", pair: "SOLUSD", side: "buy", volume: 10, price: 95.48, fee: 2.48248, cost: 954.8, time: "2026-11-01T00:50:14.556Z" },
-        { id: "PAPER-00008", pair: "SOLUSD", side: "sell", volume: 3, price: 95.47, fee: 0.744666, cost: 286.41, time: "2026-11-01T00:50:37.041Z" },
-      ],
-    };
+    const LABEL = { BTCUSDT: "BTC/USDT", ETHUSDT: "ETH/USDT", SOLUSDT: "SOL/USDT" };
 
     const money = (n) =>
-      n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2 });
-    const pct = (n) => `${n >= 0 ? "+" : ""}${n.toFixed(2)}%`;
+      Number(n || 0).toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 2,
+      });
+    const pct = (n) => `${n >= 0 ? "+" : ""}${Number(n).toFixed(2)}%`;
     const qty = (n) =>
-      n.toLocaleString("en-US", { maximumFractionDigits: 8 }).replace(/\.?0+$/, "");
+      Number(n).toLocaleString("en-US", { maximumFractionDigits: 8 }).replace(/\.?0+$/, "");
 
-    function toLocal(isoOrUnix) {
-      const d =
-        typeof isoOrUnix === "number"
-          ? new Date(isoOrUnix * 1000)
-          : new Date(isoOrUnix);
-      return new Intl.DateTimeFormat("en-GB", {
-        timeZone: TZ,
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      }).format(d).replace(",", "") + " MYT";
+    function toLocal(msOrSec) {
+      const ms = Number(msOrSec) < 1e12 ? Number(msOrSec) * 1000 : Number(msOrSec);
+      return (
+        new Intl.DateTimeFormat("en-GB", {
+          timeZone: TZ,
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        })
+          .format(new Date(ms))
+          .replace(",", "") + " MYT"
+      );
     }
 
-    async function krakenPublic(path, params = {}) {
-      const qs = new URLSearchParams(params).toString();
-      const url = `/api/kraken/${path}${qs ? `?${qs}` : ""}`;
+    async function getJSON(url) {
       const res = await fetch(url);
-      if (!res.ok) throw new Error(`Kraken ${path} failed (${res.status})`);
       const body = await res.json();
-      if (body.error && body.error.length) throw new Error(body.error.join(", "));
-      return body.result;
+      if (!res.ok) {
+        const err = new Error(body.error || `HTTP ${res.status}`);
+        err.status = res.status;
+        err.payload = body;
+        throw err;
+      }
+      return body;
     }
 
     function setStatus(kind, label) {
-      const el = document.getElementById("statusValue");
-      el.innerHTML = `<span class="status-dot ${kind}"></span>${label}`;
-    }
-
-    function parseTicker(raw) {
-      return {
-        last: Number(raw.c[0]),
-        open: Number(raw.o),
-        high: Number(raw.h[1]),
-        low: Number(raw.l[1]),
-        volume: Number(raw.v[1]),
-      };
+      document.getElementById("statusValue").innerHTML =
+        `<span class="status-dot ${kind}"></span>${label}`;
     }
 
     function renderWatch(tickers) {
       const root = document.getElementById("watchList");
-      root.innerHTML = "";
-      Object.entries(PAIR_LABEL).forEach(([id, label]) => {
-        const t = tickers[id];
-        if (!t) return;
-        const change = ((t.last - t.open) / t.open) * 100;
-        const item = document.createElement("div");
-        item.className = "watch-item";
-        item.innerHTML = `
-          <div class="pair">${label}</div>
-          <div class="last">${money(t.last)}</div>
-          <div class="meta">
-            <span class="${change >= 0 ? "pos" : "neg"}">${pct(change)} vs open</span>
-            <span>H ${money(t.high)} · L ${money(t.low)}</span>
+      root.innerHTML = tickers
+        .map((t) => {
+          const cls = t.change_pct >= 0 ? "pos" : "neg";
+          return `<div class="watch-item">
+            <div class="pair">${LABEL[t.symbol] || t.symbol}</div>
+            <div class="last">${money(t.last)}</div>
+            <div class="meta">
+              <span class="${cls}">${pct(t.change_pct)} 24h</span>
+              <span>H ${money(t.high)} · L ${money(t.low)}</span>
+            </div>
           </div>`;
-        root.appendChild(item);
-      });
+        })
+        .join("");
     }
 
-    function renderHoldings(tickers) {
-      const rows = Object.entries(PORTFOLIO.balances).map(([asset, amount]) => {
-        const price = STABLES.has(asset) ? 1 : tickers[ASSET_PAIR[asset]]?.last || 0;
-        const value = amount * price;
-        return { asset, amount, price, value };
-      }).filter((r) => r.amount > 0);
-
-      const total = rows.reduce((s, r) => s + r.value, 0) || 1;
-      rows.sort((a, b) => b.value - a.value);
-
+    function renderPortfolio(data) {
       const body = document.getElementById("holdingsBody");
-      body.innerHTML = rows
-        .map((r) => {
-          const weight = (r.value / total) * 100;
-          return `<tr>
-            <td><strong>${r.asset}</strong></td>
-            <td class="num mono">${qty(r.amount)}</td>
-            <td class="num mono">${money(r.price)}</td>
-            <td class="num mono">${money(r.value)}</td>
-            <td class="num">${weight.toFixed(1)}%</td>
-          </tr>`;
-        })
-        .join("");
-
       const bars = document.getElementById("allocBars");
-      bars.innerHTML = rows
-        .map((r) => {
-          const weight = (r.value / total) * 100;
-          return `<div class="alloc-row">
-            <div>${r.asset}</div>
-            <div class="bar"><i data-w="${weight}"></i></div>
-            <div class="num">${weight.toFixed(1)}%</div>
-          </div>`;
-        })
+      if (!data || !data.holdings) {
+        body.innerHTML = `<tr><td colspan="5">No account balances yet.</td></tr>`;
+        bars.innerHTML = "";
+        document.getElementById("equityValue").textContent = "—";
+        document.getElementById("cashValue").textContent = "—";
+        document.getElementById("cryptoValue").textContent = "—";
+        document.getElementById("fillCount").textContent = "—";
+        document.getElementById("holdingCount").textContent = "—";
+        document.getElementById("accountType").textContent = "—";
+        document.getElementById("fillsBody").innerHTML =
+          `<tr><td colspan="7">Connect a read-only API key to load fills.</td></tr>`;
+        return;
+      }
+
+      body.innerHTML = data.holdings
+        .map(
+          (h) => `<tr>
+            <td><strong>${h.asset}</strong></td>
+            <td class="num mono">${qty(h.total)}</td>
+            <td class="num mono">${h.price ? money(h.price) : "—"}</td>
+            <td class="num mono">${money(h.value)}</td>
+            <td class="num">${Number(h.weight).toFixed(1)}%</td>
+          </tr>`
+        )
         .join("");
 
+      bars.innerHTML = data.holdings
+        .slice(0, 8)
+        .map(
+          (h) => `<div class="alloc-row">
+            <div>${h.asset}</div>
+            <div class="bar"><i data-w="${h.weight}"></i></div>
+            <div class="num">${Number(h.weight).toFixed(1)}%</div>
+          </div>`
+        )
+        .join("");
       requestAnimationFrame(() => {
         bars.querySelectorAll("i").forEach((el) => {
           el.style.width = `${el.dataset.w}%`;
         });
       });
 
-      const cash = rows.filter((r) => STABLES.has(r.asset)).reduce((s, r) => s + r.value, 0);
-      const crypto = total - cash;
-      const start = PORTFOLIO.starting_balance;
-      const pnl = total - start;
-      const pnlPct = (pnl / start) * 100;
+      document.getElementById("equityValue").textContent = money(data.equity);
+      document.getElementById("cashValue").textContent = money(data.cash);
+      document.getElementById("cryptoValue").textContent = money(data.crypto);
+      document.getElementById("fillCount").textContent = String((data.trades || []).length);
+      document.getElementById("holdingCount").textContent = String(data.holdings.length);
+      document.getElementById("accountType").textContent = data.account_type || "SPOT";
+      document.getElementById("modeChip").innerHTML =
+        `<strong>Live</strong> ${data.account_type || "spot"}`;
 
-      document.getElementById("equityValue").textContent = money(total);
-      const pnlEl = document.getElementById("pnlValue");
-      pnlEl.textContent = `${money(pnl)} (${pct(pnlPct)})`;
-      pnlEl.className = pnl >= 0 ? "pos" : "neg";
-      document.getElementById("startValue").textContent = money(start);
-      document.getElementById("fillCount").textContent = String(PORTFOLIO.trades.length);
-      document.getElementById("cashValue").textContent = money(cash);
-      document.getElementById("cryptoValue").textContent = money(crypto);
-      return { total, cash, crypto };
+      document.getElementById("fillsBody").innerHTML = (data.trades || []).length
+        ? data.trades
+            .map(
+              (t) => `<tr>
+                <td>${toLocal(t.time)}</td>
+                <td>${t.symbol}</td>
+                <td class="${t.side === "buy" ? "side-buy" : "side-sell"}">${t.side.toUpperCase()}</td>
+                <td class="num mono">${qty(t.volume)}</td>
+                <td class="num mono">${money(t.price)}</td>
+                <td class="num mono">${money(t.cost)}</td>
+                <td class="num mono">${qty(t.fee)} ${t.fee_asset || ""}</td>
+              </tr>`
+            )
+            .join("")
+        : `<tr><td colspan="7">No recent fills for held *USDT pairs.</td></tr>`;
     }
 
-    function renderFills() {
-      document.getElementById("fillsBody").innerHTML = PORTFOLIO.trades
-        .map((t) => `<tr>
-          <td>${toLocal(t.time)}</td>
-          <td>${t.pair}</td>
-          <td class="${t.side === "buy" ? "side-buy" : "side-sell"}">${t.side.toUpperCase()}</td>
-          <td class="num mono">${qty(t.volume)}</td>
-          <td class="num mono">${money(t.price)}</td>
-          <td class="num mono">${money(t.cost)}</td>
-          <td class="num mono">${money(t.fee)}</td>
-        </tr>`)
-        .join("");
-    }
-
-    function drawChart(candles, pairId) {
+    function drawChart(candles, symbol) {
       const canvas = document.getElementById("priceChart");
       const ctx = canvas.getContext("2d");
       const dpr = window.devicePixelRatio || 1;
@@ -737,26 +656,21 @@
       canvas.height = Math.floor(cssH * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, cssW, cssH);
-
       if (!candles.length) return;
 
       const pad = { t: 18, r: 18, b: 36, l: 64 };
       const w = cssW - pad.l - pad.r;
       const h = cssH - pad.t - pad.b;
-      const highs = candles.map((c) => c.high);
-      const lows = candles.map((c) => c.low);
-      let min = Math.min(...lows);
-      let max = Math.max(...highs);
+      let min = Math.min(...candles.map((c) => c.low));
+      let max = Math.max(...candles.map((c) => c.high));
       const padY = (max - min) * 0.08 || 1;
       min -= padY;
       max += padY;
-
       const xAt = (i) => pad.l + (i + 0.5) * (w / candles.length);
       const yAt = (v) => pad.t + ((max - v) / (max - min)) * h;
       const candleW = Math.max(3, (w / candles.length) * 0.55);
 
-      // grid
-      ctx.strokeStyle = "rgba(19,32,25,0.08)";
+      ctx.strokeStyle = "rgba(23,20,15,0.08)";
       ctx.lineWidth = 1;
       for (let i = 0; i < 5; i++) {
         const y = pad.t + (h * i) / 4;
@@ -765,10 +679,10 @@
         ctx.lineTo(pad.l + w, y);
         ctx.stroke();
         const val = max - ((max - min) * i) / 4;
-        ctx.fillStyle = "#4d6358";
+        ctx.fillStyle = "#6a6256";
         ctx.font = "12px IBM Plex Mono, monospace";
         ctx.textAlign = "right";
-        ctx.fillText(val.toLocaleString("en-US", { maximumFractionDigits: 0 }), pad.l - 8, y + 4);
+        ctx.fillText(val.toLocaleString("en-US", { maximumFractionDigits: 2 }), pad.l - 8, y + 4);
       }
 
       candles.forEach((c, i) => {
@@ -782,13 +696,10 @@
         ctx.stroke();
         const y1 = yAt(c.open);
         const y2 = yAt(c.close);
-        const top = Math.min(y1, y2);
-        const height = Math.max(1, Math.abs(y2 - y1));
-        ctx.fillRect(x - candleW / 2, top, candleW, height);
+        ctx.fillRect(x - candleW / 2, Math.min(y1, y2), candleW, Math.max(1, Math.abs(y2 - y1)));
       });
 
-      // x labels
-      ctx.fillStyle = "#4d6358";
+      ctx.fillStyle = "#6a6256";
       ctx.font = "11px Manrope, sans-serif";
       ctx.textAlign = "center";
       const step = Math.ceil(candles.length / 6);
@@ -805,41 +716,53 @@
         ctx.fillText(label, xAt(i), cssH - 12);
       });
 
-      document.getElementById("chartTitle").textContent = PAIR_LABEL[pairId] || pairId;
+      document.getElementById("chartTitle").textContent = LABEL[symbol] || symbol;
       document.getElementById("chartMeta").textContent =
         `${candles.length} candles · Asia/Kuala_Lumpur`;
     }
 
     async function loadChart() {
-      const pair = document.getElementById("pairSelect").value;
+      const symbol = document.getElementById("pairSelect").value;
       const interval = document.getElementById("intervalSelect").value;
-      const result = await krakenPublic("OHLC", { pair, interval });
-      const key = Object.keys(result).find((k) => k !== "last");
-      const candles = (result[key] || []).slice(-72).map((row) => ({
-        time: Number(row[0]),
-        open: Number(row[1]),
-        high: Number(row[2]),
-        low: Number(row[3]),
-        close: Number(row[4]),
-      }));
-      drawChart(candles, pair);
+      const data = await getJSON(`/api/klines?symbol=${symbol}&interval=${interval}&limit=72`);
+      drawChart(data.candles || [], symbol);
     }
 
     async function refresh() {
       setStatus("warn", "Refreshing");
       try {
-        const raw = await krakenPublic("Ticker", {
-          pair: Object.keys(PAIR_LABEL).join(","),
-        });
-        const tickers = Object.fromEntries(
-          Object.entries(raw).map(([k, v]) => [k, parseTicker(v)])
-        );
-        renderWatch(tickers);
-        renderHoldings(tickers);
+        const status = await getJSON("/api/status");
+        document.getElementById("sourceLine").textContent =
+          `Source: Binance · market ${status.data_api} · account ${status.trade_api}`;
+        document.getElementById("credBanner").classList.toggle("show", !status.has_credentials);
+        if (status.has_credentials && status.key_hint) {
+          document.getElementById("modeChip").innerHTML =
+            `<strong>Key</strong> ${status.key_hint}`;
+        }
+
+        const tickers = await getJSON("/api/tickers");
+        renderWatch(tickers.tickers || []);
         await loadChart();
-        setStatus("", "Live");
-        document.getElementById("updatedAt").textContent =
-          `Updated ${toLocal(Date.now() / 1000)}`;
+
+        try {
+          const portfolio = await getJSON("/api/portfolio");
+          renderPortfolio(portfolio);
+          setStatus("", "Live account");
+        } catch (err) {
+          renderPortfolio(null);
+          if (err.status === 401 || err.payload?.needs_credentials) {
+            setStatus("warn", "Market only");
+          } else {
+            setStatus("err", "Account error");
+            document.getElementById("credBanner").classList.add("show");
+            document.getElementById("credBanner").innerHTML =
+              `Account API error: <code>${err.message}</code>. ` +
+              `If this VM is geo-blocked from api.binance.com, set <code>BINANCE_API_BASE</code> ` +
+              `in <code>.env</code> to your regional endpoint (for example Binance.US).`;
+          }
+        }
+
+        document.getElementById("updatedAt").textContent = `Updated ${toLocal(Date.now())}`;
         document.getElementById("clockChip").textContent =
           new Intl.DateTimeFormat("en-GB", {
             timeZone: TZ,
@@ -856,8 +779,6 @@
       }
     }
 
-    renderFills();
-    document.getElementById("modeChip").innerHTML = `<strong>${PORTFOLIO.mode}</strong> workspace`;
     document.getElementById("refreshBtn").addEventListener("click", refresh);
     document.getElementById("pairSelect").addEventListener("change", () => loadChart().catch(console.error));
     document.getElementById("intervalSelect").addEventListener("change", () => loadChart().catch(console.error));

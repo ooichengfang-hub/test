@@ -1,42 +1,42 @@
-# Kraken Trading Desk
+# Binance Trading Desk
 
-Crypto trading dashboard for portfolio equity, holdings, market watch, candles, and fills — backed by Kraken public market data.
+HTML dashboard for your Binance spot balances, market watch, candles, and recent fills.
 
-## HTML mode (recommended)
-
-Single-page dashboard with a tiny local proxy (needed because Kraken’s public API does not allow browser CORS).
+## Run (HTML)
 
 ```bash
+cp .env.example .env
+# edit .env with a read-only Binance API key
+
 python3 serve_dashboard.py
 ```
 
 Open [http://127.0.0.1:8080/](http://127.0.0.1:8080/).
 
-- Live tickers + OHLC from Kraken
-- Portfolio / fills from the `PORTFOLIO` object at the top of `dashboard.html` (seeded from the paper workspace)
-- Times shown in **Asia/Kuala_Lumpur**
+### Credentials
 
-Edit balances and trades in `dashboard.html` to match your book. For live account balances, keep API secrets off the client — use the Streamlit app with server-side secrets instead.
+Create an API key at Binance → API Management:
 
-## Streamlit mode (optional)
+- Enable **reading** only
+- Do **not** enable withdrawals or futures unless you intentionally need them
+- Put the key/secret in `.env` (gitignored)
+
+Without credentials the dashboard still loads live public market data; account panels stay empty until keys are set.
+
+### Regional / geo notes
+
+This environment cannot reach `api.binance.com` (HTTP 451). Public market data uses `https://data-api.binance.vision` by default.
+
+If signed account calls fail from your network, set:
+
+```bash
+BINANCE_API_BASE=https://api.binance.us   # Binance.US accounts
+# or your local/VPN-reachable Binance REST host
+```
+
+## Streamlit (optional legacy)
 
 ```bash
 pip install -r requirements.txt
 streamlit run streamlit_app.py
 ```
-
-| Mode | When it activates |
-|------|-------------------|
-| **Live** | `KRAKEN_API_KEY` + `KRAKEN_API_SECRET` in env or `.streamlit/secrets.toml` |
-| **Paper** | Local `kraken` CLI with `KRAKEN_WORKSPACE` |
-| **Demo** | Neither of the above |
-
-### Live credentials (Streamlit only)
-
-```toml
-# .streamlit/secrets.toml
-KRAKEN_API_KEY = "your-key"
-KRAKEN_API_SECRET = "your-secret"
-```
-
-Use a **read-only** key. Do not enable withdraw.
